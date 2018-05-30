@@ -7,8 +7,14 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class Fragment_Simple extends Fragment {
+    private static TextView tv_data;
+    private Button btn_upodateData;
+    private String mydata;
+    private MyInterface myInterface;
 
     @Override
     public void onAttach(Context context) {
@@ -18,12 +24,26 @@ public class Fragment_Simple extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mydata = getArguments().getString("DATA_VALUE");
+        myInterface = (MyInterface) getActivity();
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_simple_layout,container,false);
+        View view = inflater.inflate(R.layout.fragment_simple_layout, container, false);
+        tv_data = view.findViewById(R.id.tv_data);
+        btn_upodateData = view.findViewById(R.id.btn_fragmentOneData);
+
+        btn_upodateData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mydata != null) {
+                    tv_data.setText(mydata);
+                    myInterface.OnUpdateData(mydata);
+                }
+            }
+        });
         return view;
     }
 
@@ -35,6 +55,7 @@ public class Fragment_Simple extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+
     }
 
     @Override
@@ -65,5 +86,16 @@ public class Fragment_Simple extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    public static void udateData(UserDO userDO) {
+        if (userDO != null) {
+            tv_data.setText("Name : " + userDO.getUserName() + "\n Last Name: " + userDO.getUserLastName() +
+                    "\n UserId : " + userDO.getUserId() + "\n Gender: " + userDO.getGender());
+        }
+    }
+
+    public interface MyInterface {
+        public void OnUpdateData(String s);
     }
 }

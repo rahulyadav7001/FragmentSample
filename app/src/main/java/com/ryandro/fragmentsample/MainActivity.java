@@ -12,16 +12,15 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static android.content.ContentValues.TAG;
-
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements Fragment_Simple.MyInterface, MyFragmentOne.MyDataUpdateListener {
     Button btn_one, btn_two;
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
     String TAG = MainActivity.class.getSimpleName();
-
-    Date date ;
+    Date date;
     DateFormat dateFormat = new SimpleDateFormat("hh:mm:ss");
+    private UserDO userDO;
+    String myData = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,15 +28,21 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         btn_one = findViewById(R.id.btn_one);
         btn_two = findViewById(R.id.btn_two);
+        TAG += "_TAG";
         Log.d(TAG, dateFormat.format(new Date()) + " onCreate Method is Called");
-
+        myData = "Welcome to Silver Axis";
+        userDO = new UserDO("John", "12232", "Parker", "Male");
 
         btn_one.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 fragmentManager = getFragmentManager();
+                Fragment_Simple fragment_simple = new Fragment_Simple();
+                Bundle argu = new Bundle();
+                argu.putString("DATA_VALUE", myData);
+                fragment_simple.setArguments(argu);
                 fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.add(R.id.fragment_one, new Fragment_Simple());
+                fragmentTransaction.add(R.id.fragment_one, fragment_simple);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
@@ -45,9 +50,13 @@ public class MainActivity extends Activity {
         btn_two.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                MyFragmentOne myFragmentOne = new MyFragmentOne();
+                Bundle myData = new Bundle();
+                myData.putSerializable("USER_DATA", userDO);
                 fragmentManager = getFragmentManager();
                 fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.add(R.id.fragment_one, new MyFragmentOne());
+                myFragmentOne.setArguments(myData);
+                fragmentTransaction.add(R.id.fragment_two, myFragmentOne);
                 fragmentTransaction.addToBackStack(null);
                 fragmentTransaction.commit();
             }
@@ -94,5 +103,16 @@ public class MainActivity extends Activity {
         super.onDestroy();
         Log.d(TAG, dateFormat.format(new Date()) + " onDestroy Method is Called");
 
+    }
+
+    @Override
+    public void onDataChanged(UserDO userDO) {
+        this.userDO = userDO;
+        Fragment_Simple.udateData(userDO);
+    }
+
+    @Override
+    public void OnUpdateData(String myData) {
+        MyFragmentOne.setData(myData);
     }
 }

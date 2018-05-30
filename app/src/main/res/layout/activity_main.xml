@@ -12,7 +12,8 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:text="Load Simple Fragment" />
-   <Button
+
+    <Button
         android:id="@+id/btn_two"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -22,7 +23,14 @@
     <FrameLayout
         android:id="@+id/fragment_one"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="300dp"
+        android:layout_margin="10dp" />
+
+    <FrameLayout
+        android:id="@+id/fragment_two"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
         android:layout_margin="10dp" />
 
 </LinearLayout>
